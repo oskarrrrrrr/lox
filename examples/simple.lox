@@ -1,0 +1,44 @@
+/*
+ *  Example jlox program for testing.
+ */
+
+fun fib(n) {
+    var a = 0;
+    var b = 1;
+    for (var i = 0; i < n - 1; i = i + 1) {
+        var c = a + b;
+        a = b;
+        b = c;
+    }
+    return b;
+}
+
+fun fib_rec(n) {
+    if (n < 2) return n;
+    return fib_rec(n-2) + fib_rec(n-1);
+}
+
+var n = 30;
+var time = clock();
+var fib_n = fib_rec(n);
+time = clock() - time;
+print "fib(" + n + ") = " + fib_n;
+print "Calculated in " + time + "s";
+
+
+// Counter
+
+fun makeCounter() {
+  var i = 0;
+  fun count() {
+    i = i + 1;
+    return i;
+  }
+  return count;
+}
+
+var counter = makeCounter();
+print "";
+print "Counter:";
+print counter(); // "1".
+print counter(); // "2".
