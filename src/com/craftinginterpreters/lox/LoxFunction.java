@@ -14,14 +14,14 @@ public class LoxFunction implements LoxCallable {
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         Environment environment = new Environment(closure);
-        for (int i = 0; i < declaration.params.size(); i++) {
+        for (int i = 0; i < declaration.fun.params.size(); i++) {
             environment.define(
-                declaration.params.get(i).lexeme,
+                declaration.fun.params.get(i).lexeme,
                 arguments.get(i)
             );
         }
         try {
-            interpreter.executeBlock(declaration.body, environment);
+            interpreter.executeBlock(declaration.fun.body, environment);
         } catch (Return returnValue) {
             return returnValue.value;
         }
@@ -30,11 +30,14 @@ public class LoxFunction implements LoxCallable {
 
     @Override
     public int arity() {
-        return declaration.params.size();
+        return declaration.fun.params.size();
     }
 
     @Override
     public String toString() {
+        if (declaration.name.lexeme == null) {
+            return "<lambda fn>";
+        }
         return "<fn " + declaration.name.lexeme + ">";
     }
 }

@@ -153,7 +153,8 @@ public class Parser {
         consume(RIGHT_PAREN, "Expect ')' after parameters.");
         consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
         List<Stmt> body = block();
-        return new Stmt.Function(name, parameters, body);
+        Expr.Function fun = new Expr.Function(parameters, body);
+        return new Stmt.Function(name, fun);
     }
 
     public Expr expression() {
@@ -171,7 +172,7 @@ public class Parser {
     }
 
     private Expr assignment() {
-        Expr expr = iif();
+        Expr expr = lambda();
         if (match(EQUAL)) {
             Token equals = previous();
             Expr value = assignment();
@@ -182,6 +183,26 @@ public class Parser {
             throw new RuntimeError(equals, "Invalid assignment target.");
         }
         return expr;
+    }
+
+    private Expr lambda() {
+        if (match(FUN)) {
+            consume(LEFT_PAREN, "Expect '(' after 'fun'.");
+            List<Token> parameters = new ArrayList<>();
+            if (!check(RIGHT_PAREN)) {
+                do {
+                    if (parameters.size() >= 255) {
+                        error(peek(), "Can't have more that 255 parameters.");
+                    }
+                    parameters.add(consume(IDENTIFIER, "Expected parameter name."));
+                } while (match(COMMA));
+            }
+            consume(RIGHT_PAREN, "Expect ')' after parameters.");
+            consume(LEFT_BRACE, "Expect '{' before lambda body.");
+            List<Stmt> body = block();
+            return new Expr.Function(parameters, body);
+        }
+        return iif();
     }
 
     private Expr iif() {
