@@ -56,3 +56,26 @@ thrice(fun (a) { print a; });
 
 var printFun = fun (x) { print x; };
 printFun("abrakadabra");
+var nl = fun () { print ""; };
+
+
+nl();
+print "Test scoping (expected 'global' twice)'";
+var a = "global";
+{
+  fun showA() {
+    print a;
+  }
+
+  showA();
+  var a = "block";
+  showA();
+}
+
+nl();
+print "closure uses references";
+var b = 7;
+fun showB() { print b; }
+showB();
+b = 6;
+showB();
