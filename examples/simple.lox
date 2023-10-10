@@ -69,6 +69,7 @@ var a = "global";
 
   showA();
   var a = "block";
+  print "new a: " + a; // necessary, otherwise a is unused and we get an error
   showA();
 }
 
@@ -79,3 +80,9 @@ fun showB() { print b; }
 showB();
 b = 6;
 showB();
+
+// unused variable, should cause an error:
+// { var c; }
+
+// return outside of function, should cause an error:
+// return 8;
