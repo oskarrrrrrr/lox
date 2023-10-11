@@ -86,3 +86,20 @@ showB();
 
 // return outside of function, should cause an error:
 // return 8;
+
+class Cat {
+    makeSound() {
+        print "meow";
+    }
+}
+
+print Cat;
+var cat = Cat();
+print cat;
+
+cat.paws = 4;
+print cat.paws;
+cat.paws = 3;
+print cat.paws;
+
+cat.makeSound();

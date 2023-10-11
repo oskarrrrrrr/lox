@@ -13,6 +13,8 @@ abstract class Expr {
     R visitAssignExpr(Assign expr);
     R visitLogicalExpr(Logical expr);
     R visitFunctionExpr(Function expr);
+    R visitGetExpr(Get expr);
+    R visitSetExpr(Set expr);
   }
 
   static class Ternary extends Expr {
@@ -68,6 +70,21 @@ abstract class Expr {
     final Expr callee;
     final Token paren;
     final List<Expr> arguments;
+  }
+
+  static class Get extends Expr {
+    Get(Expr object, Token name) {
+        this.object = object;
+        this.name = name;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitGetExpr(this);
+    }
+
+    final Expr object;
+    final Token name;
   }
 
   static class Grouping extends Expr {
@@ -169,6 +186,23 @@ abstract class Expr {
 
     final List<Token> params;
     final List<Stmt> body;
+  }
+
+  static class Set extends Expr {
+    Set(Expr object, Token name, Expr value) {
+      this.object = object;
+      this.name = name;
+      this.value = value;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitSetExpr(this);
+    }
+
+    final Expr object;
+    final Token name;
+    final Expr value;
   }
 
   abstract <R> R accept(Visitor<R> visitor);
