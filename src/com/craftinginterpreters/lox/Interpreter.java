@@ -47,7 +47,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         environment.define(stmt.name.lexeme, null);
         Map<String, LoxFunction> methods = new HashMap<>();
         for (Stmt.Function method : stmt.methods) {
-            LoxFunction function = new LoxFunction(method, environment);
+            LoxFunction function = new LoxFunction(method, environment, true);
             methods.put(method.name.lexeme, function);
         }
         LoxClass klass = new LoxClass(stmt.name.lexeme, methods);
@@ -266,6 +266,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitThisExpr(Expr.This expr) {
+        return lookUpVariable(expr.keyword, expr);
+    }
+
+    @Override
     public Object visitAssignExpr(Expr.Assign expr) {
         Object value = evaluate(expr.value);
         Integer distance = locals.get(expr);
@@ -279,7 +284,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Stmt.Function stmt) {
-        LoxFunction function = new LoxFunction(stmt, environment);
+        LoxFunction function = new LoxFunction(stmt, environment, false);
         environment.define(stmt.name.lexeme, function);
         return null;
     }
@@ -287,7 +292,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public LoxFunction visitFunctionExpr(Expr.Function expr) {
         Stmt.Function stmt = new Stmt.Function(null, expr);
-        return new LoxFunction(stmt, environment);
+        return new LoxFunction(stmt, environment, false);
     }
 
     private Object evaluate(Expr expr) {

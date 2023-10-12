@@ -88,13 +88,18 @@ showB();
 // return 8;
 
 class Cat {
+    init(initial) {
+        this.count = initial;
+    }
+
     makeSound() {
-        print "meow";
+        this.count = this.count + 1;
+        print "meow " + this.count;
     }
 }
 
 print Cat;
-var cat = Cat();
+var cat = Cat(5);
 print cat;
 
 cat.paws = 4;
@@ -103,3 +108,9 @@ cat.paws = 3;
 print cat.paws;
 
 cat.makeSound();
+cat.makeSound();
+cat.makeSound();
+cat.makeSound();
+
+// should cause an error
+// print this;
